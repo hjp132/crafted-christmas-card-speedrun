@@ -44,6 +44,10 @@ const generateCard = () => {
     const cardFirst = new THREE.Mesh(cardGeometry, cardMaterial)
     const cardSecond = new THREE.Mesh(cardGeometry, cardMaterial2)
 
+    const pivotPointBoxGeometry = new THREE.BoxGeometry(1,1,1)
+
+    const pivotPoint = new THREE.Mesh(pivotPointBoxGeometry, cardMaterial)
+
     
     scene.add(cardFirst)
     scene.add(cardSecond)
