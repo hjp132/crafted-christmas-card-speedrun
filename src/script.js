@@ -1,5 +1,6 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import {TextGeometry} from 'three/addons/geometries/TextGeometry.js'
 import * as dat from 'lil-gui'
 
 THREE.ColorManagement.enabled = false
@@ -41,12 +42,27 @@ const generateCard = () => {
     const cardGeometry = new THREE.BoxGeometry(15, 20, 1)
     const cardMaterial = new THREE.MeshBasicMaterial({color: '#d9ccbd'})
     const cardMaterial2 = new THREE.MeshBasicMaterial({color: '#ff6030'})
+    const pivotMaterial = new THREE.MeshBasicMaterial({color: '#FFC0CB'})
     const cardFirst = new THREE.Mesh(cardGeometry, cardMaterial)
     const cardSecond = new THREE.Mesh(cardGeometry, cardMaterial2)
 
     const pivotPointBoxGeometry = new THREE.BoxGeometry(1,1,1)
 
-    const pivotPoint = new THREE.Mesh(pivotPointBoxGeometry, cardMaterial)
+    const pivotPoint = new THREE.Mesh(pivotPointBoxGeometry, pivotMaterial)
+    scene.add(pivotPoint)
+
+    const textGeometry = new TextGeometry('Hello three.js!', {
+        size: 0.5,
+        height: 0.2,
+        curveSegments: 12,
+        bevelEnabled: true,
+        bevelThickness: 0.03,
+        bevelSize: 0.02,
+        bevelOffset: 0,
+        bevelSegments: 5
+    })
+
+    scene.add(textGeometry)
 
     
     scene.add(cardFirst)
@@ -57,6 +73,20 @@ const generateCard = () => {
     cardFirst.position.x += -14
     cardFirst.position.y += 0
     cardFirst.position.z += 3.5
+
+    pivotPoint.rotation.y += -5
+    pivotPoint.rotation.x += 0
+    pivotPoint.rotation.z += 0
+    pivotPoint.position.x += -8
+    pivotPoint.position.y += -9
+    pivotPoint.position.z += 0
+
+    const firstCardPivotGroup = new THREE.Group()
+    firstCardPivotGroup.add(cardFirst)
+    firstCardPivotGroup.add(pivotPoint)
+    scene.add(firstCardPivotGroup)
+    
+    firstCardPivotGroup.rotation.y += 0.1
 
 
 
@@ -128,14 +158,15 @@ const tick = () =>
     const currentTime = Date.now()
     const deltaTime = currentTime - time
     time = currentTime
-
+    
     console.log(deltaTime)
-
+    
     // Render
     renderer.render(scene, camera)
-
+    
     // Call tick again on the next frame
     window.requestAnimationFrame(tick)
+
 }
 
 tick()
