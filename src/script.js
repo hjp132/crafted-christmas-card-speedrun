@@ -31,6 +31,7 @@ parameters.cardZRotate = 0
 let geometry = null;
 let material = null;
 let points = null;
+const firstCardGroup = new THREE.Group()
 
 const generateCard = () => {
     if(points !== null){
@@ -42,54 +43,16 @@ const generateCard = () => {
     const cardGeometry = new THREE.BoxGeometry(15, 20, 1)
     const cardMaterial = new THREE.MeshBasicMaterial({color: '#d9ccbd'})
     const cardMaterial2 = new THREE.MeshBasicMaterial({color: '#ff6030'})
-    const pivotMaterial = new THREE.MeshBasicMaterial({color: '#FFC0CB'})
     const cardFirst = new THREE.Mesh(cardGeometry, cardMaterial)
     const cardSecond = new THREE.Mesh(cardGeometry, cardMaterial2)
 
-    const pivotPointBoxGeometry = new THREE.BoxGeometry(1,1,1)
-
-    const pivotPoint = new THREE.Mesh(pivotPointBoxGeometry, pivotMaterial)
-    scene.add(pivotPoint)
-
-    const textGeometry = new TextGeometry('Hello three.js!', {
-        size: 0.5,
-        height: 0.2,
-        curveSegments: 12,
-        bevelEnabled: true,
-        bevelThickness: 0.03,
-        bevelSize: 0.02,
-        bevelOffset: 0,
-        bevelSegments: 5
-    })
-
-    scene.add(textGeometry)
-
+    cardSecond.position.x = 0
+    cardFirst.position.x = cardGeometry.parameters.width
+    firstCardGroup.add(cardFirst)
+    firstCardGroup.position.x = -cardGeometry.parameters.width / 10000000
     
-    scene.add(cardFirst)
+    scene.add(firstCardGroup)
     scene.add(cardSecond)
-    cardFirst.rotation.y += .5
-    cardFirst.rotation.x += 0
-    cardFirst.rotation.z += 0
-    cardFirst.position.x += -14
-    cardFirst.position.y += 0
-    cardFirst.position.z += 3.5
-
-    pivotPoint.rotation.y += -5
-    pivotPoint.rotation.x += 0
-    pivotPoint.rotation.z += 0
-    pivotPoint.position.x += -8
-    pivotPoint.position.y += -9
-    pivotPoint.position.z += 0
-
-    const firstCardPivotGroup = new THREE.Group()
-    firstCardPivotGroup.add(cardFirst)
-    firstCardPivotGroup.add(pivotPoint)
-    scene.add(firstCardPivotGroup)
-    
-    firstCardPivotGroup.rotation.y += 0.1
-
-
-
 }
 
     generateCard()
@@ -160,6 +123,7 @@ const tick = () =>
     time = currentTime
     
     console.log(deltaTime)
+    firstCardGroup.rotation.y += 0.01
     
     // Render
     renderer.render(scene, camera)
