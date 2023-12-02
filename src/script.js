@@ -46,13 +46,13 @@ const generateCard = () => {
     const cardFirst = new THREE.Mesh(cardGeometry, cardMaterial)
     const cardSecond = new THREE.Mesh(cardGeometry, cardMaterial2)
 
-    cardSecond.position.x = 0
-    cardFirst.position.x = cardGeometry.parameters.width
     firstCardGroup.add(cardFirst)
-    firstCardGroup.position.x = -cardGeometry.parameters.width / 10000000
     
     scene.add(firstCardGroup)
     scene.add(cardSecond)
+    cardSecond.position.x = 0
+    cardFirst.position.x = cardGeometry.parameters.width * 0.5
+    firstCardGroup.position.x = -cardGeometry.parameters.width / 2
 }
 
     generateCard()
@@ -111,10 +111,11 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 const clock = new THREE.Clock()
 
 let time = Date.now()
+
+const firstCardOriginRotation = firstCardGroup.rotation.y
+console.log(firstCardOriginRotation)
 const tick = () =>
 {
-    const elapsedTime = clock.getElapsedTime()
-
     // Update controls
     controls.update()
 
@@ -122,8 +123,10 @@ const tick = () =>
     const deltaTime = currentTime - time
     time = currentTime
     
-    console.log(deltaTime)
-    firstCardGroup.rotation.y += 0.01
+    
+    if(firstCardGroup.rotation.y >= -2.9){
+        firstCardGroup.rotation.y -= 0.007
+    }
     
     // Render
     renderer.render(scene, camera)
