@@ -33,6 +33,31 @@ let material = null;
 let points = null;
 const firstCardGroup = new THREE.Group()
 
+
+/**
+ * Textures
+ */
+const loadingManager = new THREE.LoadingManager()
+loadingManager.onStart = () =>
+{
+    console.log('loadingManager: loading started')
+}
+loadingManager.onLoad = () =>
+{
+    console.log('loadingManager: loading finished')
+}
+loadingManager.onProgress = () =>
+{
+    console.log('loadingManager: loading progressing')
+}
+loadingManager.onError = () =>
+{
+    console.log('loadingManager: loading error')
+}
+
+const textureLoader = new THREE.TextureLoader(loadingManager)
+
+
 const generateCard = () => {
     if(points !== null){
         geometry.dispose()
@@ -40,12 +65,37 @@ const generateCard = () => {
         scene.remove(points)
     }
 
-    const cardGeometry = new THREE.BoxGeometry(15, 20, 1)
-    const cardMaterial = new THREE.MeshBasicMaterial({color: '#d9ccbd'})
-    const cardMaterial2 = new THREE.MeshBasicMaterial({color: '#ff6030'})
-    const cardFirst = new THREE.Mesh(cardGeometry, cardMaterial)
-    const cardSecond = new THREE.Mesh(cardGeometry, cardMaterial2)
+    const loader = new THREE.TextureLoader();
 
+    const cardGeometry = new THREE.BoxGeometry(15, 20, 1)
+    let card1Materials
+    let card2Materials
+    
+    const imageTexture = textureLoader.load('/textures/christmas-front.jpg')
+    const internalImageTexture1 = textureLoader.load('textures/internal1.jpg')
+    const internalImageTexture2 = textureLoader.load('textures/internal2.jpg')
+    
+    card1Materials = [
+        new THREE.MeshBasicMaterial({color: '#d9ccbd'}),
+        new THREE.MeshBasicMaterial({color: '#d9ccbd'}),
+        new THREE.MeshBasicMaterial({color: '#d9ccbd'}),
+        new THREE.MeshBasicMaterial({color: '#d9ccbd'}),
+        new THREE.MeshBasicMaterial({map: imageTexture}),
+        new THREE.MeshBasicMaterial({map: internalImageTexture1}),
+    ]
+    
+    card2Materials = [
+        new THREE.MeshBasicMaterial({color: '#d9ccbd'}),
+        new THREE.MeshBasicMaterial({color: '#d9ccbd'}),
+        new THREE.MeshBasicMaterial({color: '#d9ccbd'}),
+        new THREE.MeshBasicMaterial({color: '#d9ccbd'}),
+        new THREE.MeshBasicMaterial({map: internalImageTexture2}),
+        new THREE.MeshBasicMaterial({color: '#d9ccbd'})
+    ]
+    
+    
+    const cardFirst = new THREE.Mesh(cardGeometry, card1Materials)
+    const cardSecond = new THREE.Mesh(cardGeometry, card2Materials)
     firstCardGroup.add(cardFirst)
     
     scene.add(firstCardGroup)
